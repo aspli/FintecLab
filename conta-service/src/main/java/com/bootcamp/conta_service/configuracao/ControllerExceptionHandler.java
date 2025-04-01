@@ -2,6 +2,7 @@ package com.bootcamp.conta_service.configuracao;
 
 import com.bootcamp.conta_service.exception.ContaExistenteException;
 import com.bootcamp.conta_service.exception.ContaNaoExistenteException;
+import com.bootcamp.conta_service.exception.PixNegativoException;
 import com.bootcamp.conta_service.exception.SaldoInsuficienteException;
 import org.springframework.http.*;
 import org.springframework.validation.FieldError;
@@ -53,6 +54,14 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.UNPROCESSABLE_ENTITY, ex.getMessage());
         problemDetail.setTitle("Saldo Insuficiente");
         problemDetail.setType(URI.create("http://localhost/9000/document/saldo-insuficiente"));
+        return problemDetail;
+    }
+
+    @ExceptionHandler(PixNegativoException.class)
+    private ProblemDetail HandlerPixNegativo(PixNegativoException ex){
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
+        problemDetail.setTitle("Não é permitido Pix Negativo!");
+        problemDetail.setType(URI.create("http://localhost/9000/document/pix-negativo"));
         return problemDetail;
     }
 }

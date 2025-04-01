@@ -4,6 +4,7 @@ import com.bootcamp.conta_service.dto.PixDTO;
 import com.bootcamp.conta_service.dto.PixRequestDTO;
 import com.bootcamp.conta_service.dto.PixResponseDTO;
 import com.bootcamp.conta_service.exception.ContaNaoExistenteException;
+import com.bootcamp.conta_service.exception.PixNegativoException;
 import com.bootcamp.conta_service.exception.SaldoInsuficienteException;
 import com.bootcamp.conta_service.feign.BacenService;
 import com.bootcamp.conta_service.model.Conta;
@@ -30,7 +31,7 @@ public class PixService {
     public PixResponseDTO realizaPix(PixRequestDTO pixRequestDTO) {
 
         if (pixRequestDTO.getValor().compareTo(BigDecimal.ZERO) <= 0) {
-            throw new RuntimeException("Nao pode fazer pix negativo");
+            throw new PixNegativoException("Não é possível realizar Pix Negativo!");
         }
 
         Optional<Pix> existingPix = pixRepository.findByIdempotencia(pixRequestDTO.getIdempotencia());
